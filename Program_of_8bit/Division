@@ -1,0 +1,32 @@
+; 8085 Assembly Language Program for Division
+; The program assumes:
+; Dividend = 25 (stored at memory location 2000H)
+; Divisor = 5 (stored at memory location 2001H)
+; Quotient will be stored at memory location 2002H
+; Remainder will be stored at memory location 2003H
+
+        ORG 2000H       ; Origin at memory location 2000H
+DIVIDEND: DB 25          ; Dividend
+DIVISOR:  DB 5           ; Divisor
+QUOTIENT: DB 00          ; To store Quotient
+REMAINDER: DB 00         ; To store Remainder
+
+        ORG 0000H       ; Program starts here
+START:  MVI A, 2000H    ; Load the address of DIVIDEND
+        MOV M, A        ; Move the value of DIVIDEND into A
+        MVI B, 2001H    ; Load the address of DIVISOR
+        MOV M, B        ; Move the value of DIVISOR into B
+        MVI C, 00H      ; Initialize Quotient to 0
+        MOV D, A        ; Initialize Remainder to Dividend (A)
+
+DIV_LOOP: CMP B          ; Compare Remainder (D) with Divisor (B)
+          JC END_DIV     ; If Remainder < Divisor, jump to END_DIV
+          SUB B          ; Remainder = Remainder - Divisor
+          INX C          ; Increment Quotient
+          JMP DIV_LOOP   ; Repeat the loop
+
+END_DIV:  MOV 2002H, C   ; Store Quotient at memory location 2002H
+          MOV 2003H, D   ; Store Remainder at memory location 2003H
+          HLT             ; Halt the program
+
+        END START        ; End of program
